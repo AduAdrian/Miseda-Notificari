@@ -1,0 +1,21 @@
+{
+  "name": "notification-app",
+  "version": "1.0.0",
+  "description": "Full-stack notification application with React frontend and Node.js backend",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
+    "server:dev": "cd server && npm run dev",
+    "install-deps": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "keywords": ["react", "nodejs", "mysql", "full-stack"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
