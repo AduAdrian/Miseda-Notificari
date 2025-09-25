@@ -11,7 +11,7 @@ yarn-error.log*
 .DS_Store
 .vscode/
 dist/
-build/
+# build/ - Allow client build for production deployment
 coverage/
 .nyc_output/
 .cache/
