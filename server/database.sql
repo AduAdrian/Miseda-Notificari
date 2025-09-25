@@ -1,5 +1,12 @@
--- Database schema for Notification App
--- Run these SQL commands in your phpMyAdmin to create the required tables
+-- Database schema for Notification App-- Indexes for better performance
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_created_at ON notifications(created_at);
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_telefon ON users(telefon);
+
+-- Sample data (optional) - Updated for new schema
+INSERT INTO users (nume, prenume, email, password) VALUES 
+('Admin', 'User', 'admin@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); -- password: 'password' these SQL commands in your phpMyAdmin to create the required tables
 
 CREATE DATABASE IF NOT EXISTS notification_app;
 USE notification_app;
@@ -7,11 +14,19 @@ USE notification_app;
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    nume VARCHAR(50) NOT NULL,
+    prenume VARCHAR(50) NOT NULL,
+    telefon VARCHAR(20) NULL,
+    email VARCHAR(100) NULL,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    -- Constraint to ensure at least one of telefon or email is provided
+    CONSTRAINT chk_contact CHECK (telefon IS NOT NULL OR email IS NOT NULL),
+    -- Unique constraint for email when it's not null
+    UNIQUE KEY unique_email (email),
+    -- Unique constraint for telefon when it's not null
+    UNIQUE KEY unique_telefon (telefon)
 );
 
 -- Notifications table

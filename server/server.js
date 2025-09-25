@@ -96,21 +96,48 @@ app.get('/', (req, res) => {
 // User registration
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { nume, prenume, telefon, email, password } = req.body;
     
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
+    // Validation: require nume, prenume, password, and at least one of telefon or email
+    if (!nume || !prenume || !password) {
+      return res.status(400).json({ 
+        message: 'Nume, prenume și parola sunt obligatorii' 
+      });
+    }
+
+    if (!telefon && !email) {
+      return res.status(400).json({ 
+        message: 'Cel puțin numărul de telefon sau email-ul este obligatoriu' 
+      });
     }
 
     // Check if user already exists
-    const checkUser = 'SELECT * FROM users WHERE email = ? OR username = ?';
-    db.query(checkUser, [email, username], async (err, results) => {
+    let checkUserQuery = 'SELECT * FROM users WHERE ';
+    let queryParams = [];
+    let conditions = [];
+
+    if (email) {
+      conditions.push('email = ?');
+      queryParams.push(email);
+    }
+    
+    if (telefon) {
+      conditions.push('telefon = ?');
+      queryParams.push(telefon);
+    }
+
+    checkUserQuery += conditions.join(' OR ');
+
+    db.query(checkUserQuery, queryParams, async (err, results) => {
       if (err) {
-        return res.status(500).json({ message: 'Database error' });
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Eroare la baza de date' });
       }
       
       if (results.length > 0) {
-        return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).json({ 
+          message: 'Un utilizator cu acest email sau număr de telefon există deja' 
+        });
       }
 
       // Hash password
@@ -118,67 +145,89 @@ app.post('/api/register', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       // Insert new user
-      const insertUser = 'INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, NOW())';
-      db.query(insertUser, [username, email, hashedPassword], (err, result) => {
+      const insertUser = 'INSERT INTO users (nume, prenume, telefon, email, password, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
+      db.query(insertUser, [nume, prenume, telefon || null, email || null, hashedPassword], (err, result) => {
         if (err) {
-          return res.status(500).json({ message: 'Error creating user' });
+          console.error('Error creating user:', err);
+          return res.status(500).json({ message: 'Eroare la crearea utilizatorului' });
         }
         
         res.status(201).json({ 
-          message: 'User created successfully',
+          message: 'Utilizator creat cu succes',
           userId: result.insertId 
         });
       });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Server error:', error);
+    res.status(500).json({ message: 'Eroare de server' });
   }
 });
 
 // User login
 app.post('/api/login', (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { emailOrPhone, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+    if (!emailOrPhone || !password) {
+      return res.status(400).json({ 
+        message: 'Email/telefon și parola sunt obligatorii' 
+      });
     }
 
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.query(query, [email], async (err, results) => {
+    // Check if login is email or phone
+    const isEmail = emailOrPhone.includes('@');
+    const loginField = isEmail ? 'email' : 'telefon';
+    
+    const query = `SELECT * FROM users WHERE ${loginField} = ?`;
+    db.query(query, [emailOrPhone], async (err, results) => {
       if (err) {
-        return res.status(500).json({ message: 'Database error' });
+        console.error('Database error:', err);
+        return res.status(500).json({ message: 'Eroare la baza de date' });
       }
 
       if (results.length === 0) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ 
+          message: 'Email/telefon sau parola incorectă' 
+        });
       }
 
       const user = results[0];
       const isValidPassword = await bcrypt.compare(password, user.password);
 
       if (!isValidPassword) {
-        return res.status(401).json({ message: 'Invalid credentials' });
+        return res.status(401).json({ 
+          message: 'Email/telefon sau parola incorectă' 
+        });
       }
 
       const token = jwt.sign(
-        { userId: user.id, username: user.username, email: user.email },
+        { 
+          userId: user.id, 
+          nume: user.nume, 
+          prenume: user.prenume,
+          email: user.email,
+          telefon: user.telefon
+        },
         process.env.JWT_SECRET || 'your-secret-key',
         { expiresIn: '24h' }
       );
 
       res.json({
-        message: 'Login successful',
+        message: 'Autentificare reușită',
         token,
         user: {
           id: user.id,
-          username: user.username,
-          email: user.email
+          nume: user.nume,
+          prenume: user.prenume,
+          email: user.email,
+          telefon: user.telefon
         }
       });
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Server error:', error);
+    res.status(500).json({ message: 'Eroare de server' });
   }
 });
 
