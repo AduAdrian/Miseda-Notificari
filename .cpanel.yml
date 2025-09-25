@@ -1,23 +1,9 @@
 ---
 deployment:
   tasks:
-    # Copy server files to deployment path
     - export DEPLOYPATH=/home/$USER/public_html
     - /bin/cp -R server/* $DEPLOYPATH/
     - cd $DEPLOYPATH && npm install --production
-    
-    # Copy built client files to web root
     - /bin/cp -R client/build/* /home/$USER/public_html/
-    
-    # Set executable permissions
     - chmod +x /home/$USER/public_html/server.js
-    
-  # Exclude development files from deployment
-  exclude:
-    - node_modules/
-    - client/node_modules/
-    - client/src/
-    - .git/
-    - .env*
-    - "*.log"
     - .vscode/
