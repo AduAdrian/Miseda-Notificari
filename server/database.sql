@@ -48,10 +48,23 @@ CREATE TABLE IF NOT EXISTS notifications (
 CREATE INDEX idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX idx_notifications_created_at ON notifications(created_at);
 CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_telefon ON users(telefon);
 
--- Sample data (optional)
-INSERT INTO users (username, email, password) VALUES 
-('admin', 'admin@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); -- password: 'password'
+-- Password reset tokens table
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_token (token),
+    INDEX idx_token_expires (token, expires_at)
+);
+
+-- Sample data (optional) - Updated for new schema
+INSERT INTO users (nume, prenume, email, password) VALUES 
+('Admin', 'User', 'admin@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); -- password: 'password'
 
 INSERT INTO notifications (user_id, title, message, type) VALUES 
 (1, 'Welcome!', 'Welcome to the notification app!', 'success'),

@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, [fetchProfile]);
 
-  const login = async (email, password) => {
+  const login = async (emailOrPhone, password) => {
     try {
-      const response = await axios.post('/login', { email, password });
+      const response = await axios.post('/login', { emailOrPhone, password });
       const { token, user } = response.data;
       
       localStorage.setItem('token', token);
@@ -65,11 +65,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (username, email, password) => {
+  const register = async (nume, prenume, telefon, email, password) => {
     try {
       const response = await axios.post('/register', {
-        username,
-        email,
+        nume,
+        prenume,
+        telefon: telefon || null,
+        email: email || null,
         password
       });
       

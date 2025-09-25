@@ -83,13 +83,13 @@ const Register = () => {
       return;
     }
 
-    const result = await register({
-      nume: formData.nume.trim(),
-      prenume: formData.prenume.trim(),
-      telefon: formData.telefon.trim(),
-      email: formData.email.trim(),
-      password: formData.password
-    });
+    const result = await register(
+      formData.nume.trim(),
+      formData.prenume.trim(),
+      formData.telefon.trim() || null,
+      formData.email.trim() || null,
+      formData.password
+    );
     
     if (result.success) {
       setMessage('Înregistrare realizată cu succes! Te poți conecta acum.');

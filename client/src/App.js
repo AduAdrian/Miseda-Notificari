@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Login from './components/Login';
 import Register from './components/Register';
+import ResetPassword from './components/ResetPassword';
 import Dashboard from './components/Dashboard';
 import NotificationList from './components/NotificationList';
 import CreateNotification from './components/CreateNotification';
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><NotificationList /></ProtectedRoute>} />
               <Route path="/create" element={<ProtectedRoute><CreateNotification /></ProtectedRoute>} />

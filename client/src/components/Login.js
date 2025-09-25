@@ -59,6 +59,7 @@ const Login = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage('');
     
     if (!forgotPasswordData.contact) {
       setMessage('Te rugăm să introduci email-ul sau numărul de telefon');
@@ -66,12 +67,36 @@ const Login = () => {
       return;
     }
 
-    // Simulare trimitere email/SMS
-    setTimeout(() => {
-      setMessage(`Instrucțiuni pentru resetarea parolei au fost trimise ${forgotPasswordData.method === 'email' ? 'prin email' : 'prin SMS'}`);
-      setShowForgotPassword(false);
-      setLoading(false);
-    }, 1000);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://misedainspectsrl.ro'}/api/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          emailOrPhone: forgotPasswordData.contact
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage(data.message || 'Link-ul de resetare a fost trimis pe email');
+        setShowForgotPassword(false);
+        // Clear form
+        setForgotPasswordData({
+          contact: '',
+          method: 'email'
+        });
+      } else {
+        setMessage(data.message || 'Eroare la trimiterea link-ului de resetare');
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      setMessage('Eroare la conectarea la server. Încercați din nou mai târziu.');
+    }
+    
+    setLoading(false);
   };
 
   return (
