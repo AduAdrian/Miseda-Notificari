@@ -105,18 +105,54 @@ The `.cpanel.yml` file automates:
 3. **Enable SSH keys** instead of password authentication
 4. **Regularly update dependencies** for security patches
 
+## Immediate Testing Steps
+
+### 1. Test Basic Hosting (First Step)
+1. **Upload test file**: Upload the `index.html` from your repository root
+2. **Visit**: https://misedainspectsrl.ro/index.html
+3. **Expected**: Should see the "Notification App" landing page
+4. **If 404 error**: Contact hosting provider to verify domain points to correct directory
+
+### 2. Quick Deployment Test
+```bash
+# Commit and push the test page
+git add index.html
+git commit -m "Add temporary landing page for deployment testing"
+git push origin master
+```
+
+### 3. Verify cPanel Git Setup
+1. **Check Git Version Control** in cPanel
+2. **Verify repository is connected** and pulling from correct branch
+3. **Run manual deployment** by clicking "Update from Remote"
+4. **Check deployment logs** for any errors
+
 ## Troubleshooting
+
+### 404 Error (Current Issue):
+- **Cause**: Application not yet deployed or incorrect document root
+- **Solution 1**: Follow Step 1 above to test basic hosting
+- **Solution 2**: Verify cPanel Git deployment is configured correctly
+- **Solution 3**: Check if files are in public_html directory
 
 ### Common Issues:
 - **Permission errors**: Check file permissions (755 for directories, 644 for files)
 - **Module not found**: Ensure dependencies are listed in package.json
 - **Database connection**: Verify environment variables and database credentials
 - **Port conflicts**: Check that the assigned port matches your server configuration
+- **Git deployment fails**: Verify SSH keys are set up correctly
+- **Build errors**: Check Node.js version compatibility in cPanel Node.js Selector
+
+### DNS and Domain Issues:
+- **Domain not pointing to hosting**: Verify nameservers in domain registrar
+- **SSL certificate missing**: Enable SSL/TLS in cPanel
+- **Subdomain issues**: Configure subdomains in cPanel if needed
 
 ### Logs Location:
 - **Application logs**: Check Node.js app logs in cPanel
 - **Deployment logs**: Available in Git Version Control interface
 - **Server logs**: Access via cPanel File Manager or SSH
+- **Build logs**: Available in .cpanel.yml deployment output
 
 ## Support Resources
 - [cPanel Git Documentation](https://docs.cpanel.net/knowledge-base/web-services/guide-to-git-deployment/)
