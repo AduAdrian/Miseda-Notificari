@@ -1,0 +1,24 @@
+---
+deployment:
+  tasks:
+    # Install server dependencies
+    - export DEPLOYPATH=/home/$USER/public_html/
+    - /bin/cp -R server/* $DEPLOYPATH
+    - cd $DEPLOYPATH && npm install --only=production
+    
+    # Build and deploy client
+    - cd client && npm install && npm run build
+    - /bin/cp -R client/build/* /home/$USER/public_html/
+    
+    # Set up server start script
+    - cd $DEPLOYPATH && echo "Starting notification app server..."
+    
+  # Exclude development files from deployment
+  exclude:
+    - node_modules/
+    - client/node_modules/
+    - client/src/
+    - .git/
+    - .env*
+    - "*.log"
+    - .vscode/
