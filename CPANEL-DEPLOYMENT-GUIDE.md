@@ -43,6 +43,15 @@ DB_USER=misedainr
 DB_PASSWORD=parola_ta_mysql_din_cpanel
 DB_NAME=misedainr_notifications
 ALLOWED_ORIGINS=https://misedainspectsrl.ro,https://www.misedainspectsrl.ro
+
+# Email Configuration (pentru forgot password)
+SMTP_HOST=mail.misedainspectsrl.ro
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=noreply@misedainspectsrl.ro
+SMTP_PASSWORD=Kreator1234!@
+EMAIL_FROM=noreply@misedainspectsrl.ro
+EMAIL_FROM_NAME=Miseda Inspect SRL
 ```
 
 ## Pasul 3: Deployment Backend Node.js
@@ -63,6 +72,11 @@ ALLOWED_ORIGINS=https://misedainspectsrl.ro,https://www.misedainspectsrl.ro
 - `DB_USER=misedainr`
 - `DB_PASSWORD=your_password`
 - `DB_NAME=misedainr_notifications`
+- `SMTP_HOST=mail.misedainspectsrl.ro`
+- `SMTP_PORT=587`
+- `SMTP_USER=noreply@misedainspectsrl.ro`
+- `SMTP_PASSWORD=Kreator1234!@`
+- `EMAIL_FROM=noreply@misedainspectsrl.ro`
 
 ### 3.3 Instalează dependențele
 În terminal-ul cPanel sau prin SSH:
@@ -142,4 +156,6 @@ git push origin master
 ---
 
 **Status**: ✅ Backend configurat pentru formulare românești cu nume/prenume/telefon/email
+**Funcționalități**: ✅ Login cu email sau telefon + Forgot Password cu email
+**Email**: ✅ Configurat SMTP cu noreply@misedainspectsrl.ro
 **Următorul pas**: Deployment și testare în producție
