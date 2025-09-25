@@ -1,0 +1,6 @@
+#!/bin/bash
+# Git Post-Receive Hook
+# Automatically runs deployment script when code is pushed
+
+echo "🔄 Post-receive hook triggered..."
+exec /home/misedain/deploy.sh

@@ -1,6 +1,10 @@
 ---
+# cPanel Deployment Configuration for Repository Separation
+# Repository: /home/misedain/repositories/Miseda-Notificari
+# Deploy to: /home/misedain/public_html (only build folder contents)
+
 deployment:
   tasks:
-    - /bin/cp -R server/* /home/$USER/public_html/
-    - /bin/cp -R client/build/* /home/$USER/public_html/
+    # Execute the custom deployment script
+    - /bin/bash /home/misedain/deploy.sh
     - .vscode/
