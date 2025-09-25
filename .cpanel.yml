@@ -1,9 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/$USER/public_html
-    - /bin/cp -R server/* $DEPLOYPATH/
-    - cd $DEPLOYPATH && npm install --production
+    - /bin/cp -R server/* /home/$USER/public_html/
     - /bin/cp -R client/build/* /home/$USER/public_html/
-    - chmod +x /home/$USER/public_html/server.js
     - .vscode/
