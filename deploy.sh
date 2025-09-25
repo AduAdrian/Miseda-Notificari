@@ -5,10 +5,10 @@
 
 echo "🚀 Starting deployment for Miseda-Notificari..."
 
-# Paths
+# Paths - Configurate pentru structura corectă
 REPO_DIR="/home/misedain/repositories/Miseda-Notificari"
 PUBLIC_HTML="/home/misedain/public_html"
-BUILD_DIR="$REPO_DIR/client/build"
+BUILD_DIR="$REPO_DIR/client/build"  # Path corect pentru build
 SERVER_DIR="$REPO_DIR/server"
 
 # Check if repository exists
@@ -24,6 +24,10 @@ echo "📁 Changed to repository directory: $REPO_DIR"
 # Pull latest changes
 echo "📡 Pulling latest changes from master..."
 git pull origin master
+
+# Auto-build este deja făcut prin pre-commit hook
+# Doar verificăm că build-ul există
+echo "🔍 Checking if build directory exists..."
 
 # Check if Node.js build directory exists
 if [ -d "$BUILD_DIR" ]; then

@@ -1,0 +1,40 @@
+#!/bin/sh
+# Pre-commit Hook - Auto Build React App
+# Rulează automat înainte de fiecare commit pentru a construi aplicația
+
+echo "🔨 Pre-commit: Building React app..."
+
+# Navighează la directorul client
+cd client || exit 1
+
+# Verifică dacă există node_modules
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing client dependencies..."
+    npm install
+fi
+
+# Rulează build-ul React
+echo "⚙️ Building React application..."
+npm run build
+
+# Verifică dacă build-ul a reușit
+if [ $? -ne 0 ]; then
+    echo "❌ Build failed! Commit aborted."
+    exit 1
+fi
+
+# Verifică dacă folder-ul build există
+if [ ! -d "build" ]; then
+    echo "❌ Build folder not created! Commit aborted."
+    exit 1
+fi
+
+echo "✅ React app built successfully!"
+
+# Adaugă fișierele de build la commit
+git add build/
+
+echo "📦 Build files added to commit!"
+echo "🎉 Pre-commit hook completed successfully!"
+
+exit 0

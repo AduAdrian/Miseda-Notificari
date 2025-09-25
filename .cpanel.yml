@@ -1,10 +1,12 @@
 ---
-# cPanel Deployment Configuration for Repository Separation
+# cPanel Deployment Configuration
 # Repository: /home/misedain/repositories/Miseda-Notificari
-# Deploy to: /home/misedain/public_html (only build folder contents)
+# Auto-build: Pre-commit hook builds React app automatically
+# Deploy target: /home/misedain/public_html (copy build files only)
 
 deployment:
   tasks:
     # Execute the custom deployment script
+    # Script copiază automat din repositories/Miseda-Notificari/client/build/* în public_html/
     - /bin/bash /home/misedain/deploy.sh
     - .vscode/

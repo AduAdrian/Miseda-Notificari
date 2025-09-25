@@ -10,7 +10,10 @@
     "dev": "concurrently \"npm run server:dev\" \"npm run client\"",
     "server:dev": "cd server && npm run dev",
     "install-deps": "npm install && cd server && npm install && cd ../client && npm install",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "build:auto": "cd client && npm install && npm run build",
+    "deploy:prep": "npm run build:auto && git add client/build/",
+    "setup:hooks": "cp pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit"
   },
   "keywords": ["react", "nodejs", "mysql", "full-stack"],
   "author": "",
